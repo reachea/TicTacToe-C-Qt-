@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>AppData/button_modified.png</file>
+        <file>AppData/Background.jpg</file>
+        <file>AppData/game_bg.jpg</file>
+        <file>AppData/backgroundv2.jpg</file>
+        <file>AppData/game_bg_3.jpg</file>
+        <file>AppData/back.png</file>
+        <file>AppData/o.png</file>
+        <file>AppData/x.png</file>
+    </qresource>
+</RCC>
