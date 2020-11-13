@@ -3,6 +3,7 @@
 #include <QPixmap>
 #include <Game.h>
 #include <QDebug>
+#include <QMediaPlayer>
 
 extern Game *game;
 
@@ -16,6 +17,8 @@ QString Mark::getOwner(){
 
 void Mark::player(QString player){
     owner = player;
+    QMediaPlayer *placing = new QMediaPlayer();
+    placing->setMedia(QUrl("qrc:/sounds/AppData/placing.wav"));
 
     Xo *xo = new Xo(owner);
 
@@ -25,12 +28,23 @@ void Mark::player(QString player){
         game->scene->addItem(xo);
         createLines(xo);
         findNeighbors(xo);
+        if(placing->state() == QMediaPlayer::PlayingState){
+            placing->setPosition(0);
+        } else if (placing->state() == QMediaPlayer::StoppedState){
+            placing->play();
+        }
+
     } else {
         xo->setPixmap(QPixmap(":/images/AppData/o.png"));
         xo->setPos(this->x(),this->y());
         game->scene->addItem(xo);
         createLines(xo);
         findNeighbors(xo);
+        if(placing->state() == QMediaPlayer::PlayingState){
+            placing->setPosition(0);
+        } else if (placing->state() == QMediaPlayer::StoppedState){
+            placing->play();
+        }
     }
 }
 

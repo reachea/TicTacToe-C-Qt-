@@ -9,4 +9,8 @@
         <file>AppData/o.png</file>
         <file>AppData/x.png</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file>AppData/placing.wav</file>
+        <file>AppData/background_2.wav</file>
+    </qresource>
 </RCC>

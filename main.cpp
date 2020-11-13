@@ -9,6 +9,9 @@ int main(int argc, char *argv[])
 
     game = new Game();
 
+    game->music = new QMediaPlayer();
+    game->music->setMedia(QUrl("qrc:/sounds/AppData/background_2.wav"));
+
     game->show();
 
     game->mainMenu();

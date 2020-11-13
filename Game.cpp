@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QBrush>
 #include <QDebug>
+#include <QMediaPlayer>
 
 Game::Game(QWidget *parent){
     // set up the screen
@@ -119,7 +120,7 @@ void Game::gameEnd(int boardSize, QList<Xo *> neighborsVertical, QList<Xo *> nei
             int byPos = 275;
             playButton->setPos(bxPos,byPos);
             scene->addItem(playButton);
-            connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
+            connect(playButton,SIGNAL(clicked()),this,SLOT(choice()));
 
             // create the quit button
             Button *quitButton = new Button(QString("Quit"));
@@ -138,6 +139,10 @@ void Game::mainMenu(){
     // clear the scene
     scene->clear();
 
+    if (music->state() == QMediaPlayer::StoppedState) {
+        music->play();
+    }
+
     // set background image
     setBackgroundBrush(QBrush(QImage(":/images/AppData/backgroundv2.jpg")));
 
@@ -147,7 +152,7 @@ void Game::mainMenu(){
     int byPos = 275;
     playButton->setPos(bxPos,byPos);
     scene->addItem(playButton);
-    connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
+    connect(playButton,SIGNAL(clicked()),this,SLOT(choice()));
 
     // create the quit button
     Button *quitButton = new Button(QString("Quit"));
@@ -156,6 +161,37 @@ void Game::mainMenu(){
     quitButton->setPos(qxPos,qyPos);
     scene->addItem(quitButton);
     connect(quitButton,SIGNAL(clicked()),this,SLOT(close()));
+}
+
+void Game::choice(){
+    // prompt to choose player
+    scene->clear();
+
+    // draw panel
+    drawPanel(162,0,700,768,Qt::darkGray,1);
+
+    setBackgroundBrush(QBrush(QImage(":/images/AppData/game_bg_3.jpg")));
+
+    QGraphicsTextItem *gameTie = new QGraphicsTextItem(QString("Choose one of the following:"));
+    gameTie->setPos(380,100);
+    QFont gameTieFont("cosmic sans", 15);
+    gameTie->setFont(gameTieFont);
+    scene->addItem(gameTie);
+
+    Icon *xPlayer = new Icon(QString(":/images/AppData/x.png"), NULL,  "X");
+    int bxPos = this->width()/2 - xPlayer->boundingRect().width()/2;
+    int byPos = 275;
+    xPlayer->setPos(bxPos,byPos);
+    scene->addItem(xPlayer);
+    connect(xPlayer,SIGNAL(clicked(QString)),this,SLOT(start(QString)));
+
+    // create the quit button
+    Icon *oPlayer = new Icon(QString(":/images/AppData/o.png"), NULL , "O");
+    int qxPos = this->width()/2 - oPlayer->boundingRect().width()/2;
+    int qyPos = 450;
+    oPlayer->setPos(qxPos,qyPos);
+    scene->addItem(oPlayer);
+    connect(oPlayer,SIGNAL(clicked(QString)),this,SLOT(start(QString)));
 }
 
 void Game::drawPanel(int x, int y, int width, int height, QColor color, double opacity){
@@ -169,21 +205,20 @@ void Game::drawPanel(int x, int y, int width, int height, QColor color, double o
     scene->addItem(panel);
 }
 
-void Game::drawGUI(){
+void Game::drawGUI(QString player){
     // draw panel
     drawPanel(162,0,700,768,Qt::darkGray,0.5);
 
     // show whos turn
     whosTurnText = new QGraphicsTextItem();
-    setWhosTurn(QString("X"));
+    setWhosTurn(player);
     QFont whosTurnFont("cosmic sans", 15);
     whosTurnText->setFont(whosTurnFont);
     whosTurnText->setPos(450,0);
     scene->addItem(whosTurnText);
-
 }
 
-void Game::start(){
+void Game::start(QString player){
     // clear all scene
     scene->clear();
 
@@ -203,10 +238,10 @@ void Game::start(){
     Icon *backButton = new Icon(QString(":/images/AppData/back.png"));
     backButton->setPos(25,25);
     scene->addItem(backButton);
-    connect(backButton,SIGNAL(clicked()),this,SLOT(mainMenu()));
+    connect(backButton,SIGNAL(clicked(QString)),this,SLOT(mainMenu()));
 
     // draw GUI
-    drawGUI();
+    drawGUI(player);
 
     // create mark board
     markBoard = new MarkBoard();
